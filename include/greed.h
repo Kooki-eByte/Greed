@@ -22,6 +22,8 @@ typedef double f64;
 typedef unsigned char boolean;
 #endif
 
+#ifndef GREED_MAIN
+#define GREED_MAIN
 /* --- GREED LOGGER --- */
 typedef enum { LOG_DBG, LOG_SCS, LOG_WRN, LOG_ERR, LOG_LVL_LEN } LOG_LEVEL;
 
@@ -33,3 +35,4 @@ extern void g_logger(LOG_LEVEL lvl, const char *msg, char *file, uint line);
 #define g_log_success(msg) g_logger(LOG_SCS, msg, __FILE__, __LINE__);
 #define g_log_warning(msg) g_logger(LOG_WRN, msg, __FILE__, __LINE__);
 #define g_log_error(msg) g_logger(LOG_ERR, msg, __FILE__, __LINE__);
+#endif
