@@ -1,14 +1,11 @@
 CC = gcc
 CFLAG = -Wall -Werror
-TARGET = lib/greed
+OUT = bin/greed
 
-all: $(TARGET).lib
+SRC_CORE = ./src/greed.c
 
-$(TARGET).lib: lib/g_logger.o
-	ar rcs $@ $^
-
-lib/g_logger.o: src/g_logger.c
-	$(CC) $(CFLAG) -c $^ -o $@
+all: 
+	$(CC) -std=c99 $(CFLAG) $(SRC_CORE) -o $(OUT)  
 
 clean:
-	rm -f lib/*.o lib/*.lib
+	rm -rf ./bin/greed
