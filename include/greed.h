@@ -1,35 +1,49 @@
-#ifndef GREED_LOGGER_IMPL
-#define GREED_LOGGER_IMPL
+#ifndef GREED_H
+#define GREED_H
+/* --- GREED LOGGER --- */
 /*
  * Greed is a basic logging library, utilizing useful logs for informing a
  * developer based on different levels of logging and colorizing them to ensure
  * readability. Being GREEDY with everything involved in the code.
- */
+*/
+
+#ifdef __cplusplus
+extern "C" {
+#endif //__cplusplus
 
 #include <stdio.h>
 #include <time.h>
 
-/* --- GREED LOGGER --- */
 typedef enum { LOG_DBG, LOG_SCS, LOG_WRN, LOG_ERR, LOG_LVL_LEN } LOG_LEVEL;
 
-const char *DEFAULT_COLOR = "\x1b[0m";
+static const char *type[LOG_LVL_LEN] = {"DEBUG", "SUCCESS", "WARNING", "ERROR"};
 
-char *type[LOG_LVL_LEN] = {"DEBUG", "SUCCESS", "WARNING", "ERROR"};
-char *colors[LOG_LVL_LEN] = {
+static const char *colors[LOG_LVL_LEN] = {
     "\x1b[34m", /* blue */
     "\x1b[32m", /* green */
     "\x1b[33m", /* yellow */
     "\x1b[31m"  /* red */
 };
-time_t current_time;
-struct tm *m_time;
 
-void get_time() {
+void g_logger(LOG_LEVEL lvl, const char *msg, const char *file, int line);
+
+#define g_log_debug(msg) g_logger(LOG_DBG, msg, __FILE__, __LINE__);
+#define g_log_success(msg) g_logger(LOG_SCS, msg, __FILE__, __LINE__);
+#define g_log_warning(msg) g_logger(LOG_WRN, msg, __FILE__, __LINE__);
+#define g_log_error(msg) g_logger(LOG_ERR, msg, __FILE__, __LINE__);
+
+#ifdef GREED_IMPLEMENTATION
+static const char *DEFAULT_COLOR = "\x1b[0m";
+
+static time_t current_time;
+static struct tm *m_time;
+
+static void get_time() {
   time(&current_time);
   m_time = localtime(&current_time);
 }
 
-void g_logger(LOG_LEVEL lvl, const char *msg, char *file, int line) {
+inline void g_logger(LOG_LEVEL lvl, const char *msg, const char *file, int line) {
   get_time();
   printf("%s", colors[lvl]);
   printf("[%s]", type[lvl]);
@@ -38,10 +52,10 @@ void g_logger(LOG_LEVEL lvl, const char *msg, char *file, int line) {
          m_time->tm_sec);
   printf("[%s on line %u in file %s]\n%s", msg, line, file, DEFAULT_COLOR);
 }
+#endif // GREED_IMPLEMENTATION
 
-#define g_log_debug(msg) g_logger(LOG_DBG, msg, __FILE__, __LINE__);
-#define g_log_success(msg) g_logger(LOG_SCS, msg, __FILE__, __LINE__);
-#define g_log_warning(msg) g_logger(LOG_WRN, msg, __FILE__, __LINE__);
-#define g_log_error(msg) g_logger(LOG_ERR, msg, __FILE__, __LINE__);
+#ifdef __cplusplus
+}
+#endif //__cplusplus
 
-#endif // GREED_LOGGER_H
+#endif // GREED_H

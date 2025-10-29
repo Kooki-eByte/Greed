@@ -1,3 +1,4 @@
+#define GREED_IMPLEMENTATION
 #include "../include/greed.h"
 
 void test_warn_and_error_logs() {
